@@ -25,18 +25,11 @@ Route.get('/testquery', async ()=>{
   //const contractsData = await Contracts.query().where('id',3).fetch();
   //const users = await contractsData.users().fetch();
     const contracts = await Contracts.find(3);
-    const usr = await Users.find(3)
-    const users = await contracts.users().fetch();
     const test = await contracts.users().wherePivot('contract_id',contracts.id).fetch();
     console.log(test);
     let resp = {
       data : contracts,
       t: test
     }
-    //console.log(contractsData);
-    //console.log(users);
-    //return await Database.table('contracts').first();
-    //return await Contracts.query().where('id',3).fetch();
-    //return await contractsData.users().fetch();
     return resp;
 })
