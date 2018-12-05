@@ -20,16 +20,21 @@ const Contracts = use('App/Models/Contracts');
 const Users = use('App/Models/User');
 
 Route.on('/').render('welcome')
+Route.group(()=>{
+  Route.post('getcontracts', 'ContractController.getUsers');
+
+}).prefix('api/contracts');
 Route.get('/testquery', async ()=>{
 
   //const contractsData = await Contracts.query().where('id',3).fetch();
   //const users = await contractsData.users().fetch();
-    const contracts = await Contracts.find(3);
-    const test = await contracts.users().wherePivot('contract_id',contracts.id).fetch();
-    console.log(test);
+    //const contracts = await Contracts.find(3);
+    const contracts = await Contracts.query().where('contracts_id', 3).with('users').fetch();
+    //const test = await contracts.users().wherePivot('contract_id',contracts.id).fetch();
+    //console.log(test);
     let resp = {
       data : contracts,
-      t: test
+     // t: test
     }
     return resp;
 })
