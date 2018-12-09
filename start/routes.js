@@ -19,11 +19,27 @@ const Database = use('Database');
 const Contracts = use('App/Models/Contracts');
 const Users = use('App/Models/User');
 
-Route.on('/').render('welcome')
-Route.group(()=>{
-  Route.post('getcontracts', 'ContractController.getUsers');
 
-}).prefix('api/contracts');
+Route.on('/').render('welcome')
+
+Route.post('/api/login', 'UserController.login')
+Route.post('/api/users/test','UserController.signup')
+
+Route.group(() => {
+  Route.post('/create', 'UserController.signup')
+  Route.post('/getusers','UserController.getUsers')
+  // user login
+})
+.prefix('api/users')
+.middleware(['auth:jwt'])
+//.middleware('auth')
+
+Route.group(()=>{
+  Route.post('getcontracts', 'ContractController.getContracts');
+
+}).prefix('api/contracts')
+//.middleware('auth')
+
 Route.get('/testquery', async ()=>{
 
   //const contractsData = await Contracts.query().where('id',3).fetch();
