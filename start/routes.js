@@ -35,10 +35,14 @@ Route.group(() => {
 //.middleware('auth')
 
 Route.group(()=>{
-  Route.post('getcontracts', 'ContractController.getContracts');
+  Route.post('getcontracts',  'ContractController.getContracts');
+  Route.get('getcontract/:id', 'ContractController.getContract');
+  Route.put('updatecontract/:id', 'ContractController.updateContract');
+  Route.delete('deletecontract/:id', 'ContractController.deleteContract');
 
-}).prefix('api/contracts')
-//.middleware('auth')
+})
+.prefix('api/contracts')
+.middleware(['auth:jwt'])
 
 Route.get('/testquery', async ()=>{
 
