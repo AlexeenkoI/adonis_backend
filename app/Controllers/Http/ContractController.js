@@ -72,13 +72,13 @@ class ContractController {
         .paginate(params.page, params.limit)
 
         response.status(200).json({
-          sucess: true,
+          success: true,
           data : contracts
         })
 
       } catch (error) {
         response.status(400).json({
-          sucess : false,
+          success : false,
           message : `Ошибка на сервере ${error.message}`
         })
       }
@@ -104,11 +104,11 @@ class ContractController {
 
     /**
      * 
-     * @param {REQUEST} request
-     * @param {RESPONSE} response
-     * @returns {JSON} json
+     * @param {Object} request request
+     * @param {Object} response response object
+     * @returns {JSON} json json-response
      */
-    getContract({request, response}){
+    async getContract({request, response}){
       //TO DO getcoontract by id here
     }
 
@@ -118,7 +118,7 @@ class ContractController {
      * @param {RESPONSE} response
      * @returns {JSON} json 
      */
-    updateContract({request, response}){
+    async updateContract({request, response}){
       // TO DO updatecontract here
     }
 
@@ -129,8 +129,12 @@ class ContractController {
      * @param {RESPONSE} response
      * @returns {JSON} json 
      */
-    deleteContract({request, response}){
+    async deleteContract({request, response}){
       //TO DO delete contract by id
+    }
+
+    async createContract({}){
+      //TODO createContract
     }
 }
 

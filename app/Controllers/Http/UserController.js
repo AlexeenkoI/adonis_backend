@@ -53,20 +53,35 @@ class UserController {
     }
 
     async getUsers({request, auth, response}){
-      try {
-        const currentUser = await User.find(auth.current.user.id);
-        return response.json({
-          status: true,
-          data : currentUser
-        })
-      } catch (error) {
-        return response.status(400).json({
-          success : false,
-          message : 'User not found'
-        })
-      }
+
+
+      //try {
+      //  const currentUser = await User.find(auth.current.user.id);
+      //  return response.json({
+      //    status: true,
+      //    data : currentUser
+      //  })
+      //} catch (error) {
+      //  return response.status(400).json({
+      //    success : false,
+      //    message : 'User not found'
+      //  })
+      //}
 
     }
+
+    async deleteUser({request, auth, response}){
+
+    }
+
+    async getUser({request, auth, response}){
+
+    }
+
+    async updateUser({request, auth, response}){
+
+    }
+
 }
 
 module.exports = UserController

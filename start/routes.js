@@ -20,41 +20,46 @@ const Contracts = use('App/Models/Contracts');
 const Users = use('App/Models/User');
 
 
-Route.on('/').render('welcome')
+Route.on('/').render('welcome');
 
-Route.post('/api/login', 'UserController.login')
-Route.post('/api/users/test','UserController.signup')
+//Тестовый  маршрут для создания пользователя
+Route.post('/api/users/test','UserController.signup');
+
+//Роуты пользователей и логин
+Route.post('/api/login', 'UserController.login');
 
 Route.group(() => {
-  Route.post('/create', 'UserController.signup')
-  Route.post('/getusers','UserController.getUsers')
-  // user login
+  Route.put('/create', 'UserController.signup');
+  Route.post('/getusers','UserController.getUsers');
+  Route.delete('deleteuser/:id', 'UserController.deleteUser');
+  Route.get('/getuser/:id', 'UserController.getUser');
+  Route.put('/updateuser/:id','UserController.updateUser');
 })
 .prefix('api/users')
-.middleware(['auth:jwt'])
-//.middleware('auth')
+.middleware(['auth:jwt']);
 
+// Роуты списка заявлений/контрактов (Contracts)
 Route.group(()=>{
   Route.post('getcontracts',  'ContractController.getContracts');
+  Route.put('createcontract', 'ContractsController.createContract')
   Route.get('getcontract/:id', 'ContractController.getContract');
   Route.put('updatecontract/:id', 'ContractController.updateContract');
   Route.delete('deletecontract/:id', 'ContractController.deleteContract');
 
 })
 .prefix('api/contracts')
-.middleware(['auth:jwt'])
+.middleware(['auth:jwt']);
 
-Route.get('/testquery', async ()=>{
-
-  //const contractsData = await Contracts.query().where('id',3).fetch();
-  //const users = await contractsData.users().fetch();
-    //const contracts = await Contracts.find(3);
-    const contracts = await Contracts.query().where('contracts_id', 3).with('users').fetch();
-    //const test = await contracts.users().wherePivot('contract_id',contracts.id).fetch();
-    //console.log(test);
-    let resp = {
-      data : contracts,
-     // t: test
-    }
-    return resp;
+//Роуты клиентов (Customers)
+Route.group(() => {
+  Route.post('getcustomers', 'CustomerController.getCustomers');
+  Route.get('getcustomer/:id', 'CustomerController.getCustomer');
+  Route.put('updatecustomer/:id', 'CustomerController.updateCustomer');
+  Route.delete('deletecustomer/:id', 'CustomerController.deleteCustomer');
+  Route.put('/createcustomer', 'CustomerController.createCustomer');
 })
+.prefix('api/customers')
+.middleware(['auth:jwt']);
+
+
+
