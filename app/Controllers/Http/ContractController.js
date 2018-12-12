@@ -1,4 +1,5 @@
 'use strict'
+/** @type {typeof import('../../Models/Contracts')} */
 
 const Contracts = use('App/Models/Contracts');
 const User = use("App/Models/User");
@@ -14,7 +15,6 @@ class ContractController {
      * @return {JSON} json with data
      */
     async getContracts({ request, response }){
-
       let defaultParams = {
         page : 1,
         limit : 20,
