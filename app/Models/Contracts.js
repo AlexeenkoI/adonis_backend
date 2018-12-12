@@ -14,7 +14,10 @@ class Contracts extends Model {
 
     users() {
         return this
-        .belongsToMany('App/Models/User')    
+        .belongsToMany(
+            'App/Models/User',
+            'contract_id',
+            'user_id')    
         .pivotTable('performes')
     }
 

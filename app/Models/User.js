@@ -20,6 +20,11 @@ class User extends Model {
       }
     })
   }
+  //hide returning password field
+  static get hidden () {
+    return ['password']
+  }
+
   static get createdAtColumn() {
     return null;
   }
@@ -48,6 +53,16 @@ class User extends Model {
    */
   tokens () {
     return this.hasMany('App/Models/Token')
+  }
+
+  //зависимость через performes для контрактов
+  contracts() {
+    return this
+      .belongsToMany(
+          'App/Models/Contracts',
+          'user_id',
+          'contract_id')    
+      .pivotTable('performes')
   }
 }
 

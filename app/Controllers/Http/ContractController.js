@@ -1,6 +1,7 @@
 'use strict'
 
 const Contracts = use('App/Models/Contracts');
+const User = use("App/Models/User");
 const Performes = use('App/Models/Performes');
 const Hash = use('Hash');
 
@@ -58,8 +59,8 @@ class ContractController {
               builder.where('date_deadline', '<',params.data[key]);
             }
             else if(key === 'whereString'){
-              let str = params.data;
-              builder.whereRaw(`CONCAT(contract_number, address) LIKE '%${str[key]}%'`);
+              let str = params.data[key];
+              builder.whereRaw(`CONCAT(contract_number, address) LIKE '%${str}%'`);
             }
             else if(key === 'contractor'){
               builder.whereIn('id', subQ.rows.map( item => item.contract_id));
@@ -71,45 +72,43 @@ class ContractController {
         .with('users')
         .paginate(params.page, params.limit)
 
-        response.status(200).json({
+        return response.status(200).json({
           success: true,
           data : contracts
         })
 
       } catch (error) {
-        response.status(400).json({
+        return response.status(400).json({
           success : false,
           message : `Ошибка на сервере ${error.message}`
         })
       }
-      //const contracts = await Contracts
-      //  .query()
-      //  //.where('customer_id', 3)
-      //  .where(builder => {
-      //    for(let key in data){
-      //      if(key === 'whereString'){
-      //        builder.whereRaw(`CONCAT(contract_number, address) LIKE '%${data[key]}%'`);
-      //      }else{
-      //        //builder.where(key, data[key]);
-      //      }
-      //    }
-      //  })
-      //  .whereIn('id',ids.rows.map(item=> item.contract_id))
-      //  .with('users')
-      //  .paginate()
-        //.toString()
-        //.fetch()
-        //.toSQL();
     }
 
     /**
      * 
-     * @param {Object} request request
+     * @param {Object} params url params
      * @param {Object} response response object
      * @returns {JSON} json json-response
      */
-    async getContract({request, response}){
-      //TO DO getcoontract by id here
+    async getContract({params, response}){
+      try {
+        const  contract = await Contracts.query()
+          .where('id',params.id)
+          .with('users')
+          .firstOrFail();
+        
+        return response.status(200).json({
+          success : true,
+          data : contract,
+        })
+      } catch (error) {
+        return response.status(404).json({
+          success : false,
+          message : `Error : ${error.message}`
+        })
+      }
+
     }
 
     /**
@@ -118,8 +117,38 @@ class ContractController {
      * @param {RESPONSE} response
      * @returns {JSON} json 
      */
-    async updateContract({request, response}){
-      // TO DO updatecontract here
+    async updateContract({request, params, response}){
+      if(typeof params.id === 'undefined')
+        return response.status(500).json({
+          success : false,
+          message : 'Ошибочные данные'
+        })
+      const data = request.body.data;
+      try {
+        const contract = await Contracts.find(params.id);
+        for (let key in data){
+          if(key === 'id') continue;
+          if(key !=='contractor')
+            contract[key] = data[key];
+        }
+        const result = await contract.save();
+        if(data.contractor){
+          //Синхронизируем связи в сводной таблице 
+          // sunc = .detach([]) & .attach([]) - удаление связей и создание связей заново - апдейтим связующую таблицу
+          await contract.users().sync(data.contractor);
+        }
+        return response.status(200).json({
+          success : true,
+          message : 'Контракт успешно изменен',
+          updateId : contract.id
+        })
+      } catch (error) {
+        return response.status(500).json({
+          success : false,
+          message : `Ошибка : ${error.message}`
+        })
+      }
+
     }
 
 
@@ -129,12 +158,59 @@ class ContractController {
      * @param {RESPONSE} response
      * @returns {JSON} json 
      */
-    async deleteContract({request, response}){
-      //TO DO delete contract by id
+    async deleteContract({request, params, response}){
+      if(typeof params.id === 'undefined')
+        return response.status(500).json({
+          success : false,
+          message : 'Ошибочные данные'
+        })
+      try {
+        const contract = await Contracts.query()
+          .where('id',params.id)
+          .firstOrFail();
+        
+        await contract.delete();
+
+        return response.status(200).json({
+          success : true,
+          message : `Успешно удалено`
+        })
+
+      } catch (error) {
+        return response.status(500).json({
+          success : false,
+          message : `Ошибка : ${error.message}`
+        })
+      }
     }
 
-    async createContract({}){
-      //TODO createContract
+    async createContract({request, response}){
+      const data = request.body.data;
+
+      try {
+        const contract = new Contracts();
+        for (let key in data){
+          if(key !=='contractor')
+            contract[key] = data[key];
+        }
+        const result = await contract.save();
+        if(data.contractor){
+          //Синхронизируем связи в сводной таблице 
+          // здесь вызываем только attach([]) - добавление связей в сводную таблицу
+          await contract.users().attach(data.contractor);
+        }
+        return response.status(200).json({
+          success : true,
+          message : 'Контракт успешно создан',
+          insertId : contract.id
+        })
+      } catch (error) {
+        return response.status(500).json({
+          success : false,
+          message : `Ошибка : ${error.message}`
+        })
+      }
+
     }
 }
 
