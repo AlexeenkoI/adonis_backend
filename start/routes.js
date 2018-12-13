@@ -30,21 +30,21 @@ Route.post('/api/login', 'UserController.login');
 
 Route.group(() => {
   Route.put('/create', 'UserController.signup');
-  Route.post('/getusers','UserController.getUsers');
-  Route.delete('deleteuser/:id', 'UserController.deleteUser');
-  Route.get('/getuser/:id', 'UserController.getUser');
-  Route.put('/updateuser/:id','UserController.updateUser');
+  Route.post('/getall','UserController.getUsers');
+  Route.delete('/delete/:id', 'UserController.deleteUser');
+  Route.get('/get/:id', 'UserController.getUser');
+  Route.put('/update/:id','UserController.updateUser');
 })
 .prefix('api/users')
 .middleware(['auth:jwt']);
 
 // Роуты списка заявлений/контрактов (Contracts)
 Route.group(()=>{
-  Route.post('getcontracts',  'ContractController.getContracts');
-  Route.put('createcontract', 'ContractsController.createContract')
-  Route.get('getcontract/:id', 'ContractController.getContract');
-  Route.put('updatecontract/:id', 'ContractController.updateContract');
-  Route.delete('deletecontract/:id', 'ContractController.deleteContract');
+  Route.post('/getall',  'ContractController.getContracts');
+  Route.put('/create', 'ContractsController.createContract')
+  Route.get('/get/:id', 'ContractController.getContract');
+  Route.put('/update/:id', 'ContractController.updateContract');
+  Route.delete('delete/:id', 'ContractController.deleteContract');
 
 })
 .prefix('api/contracts')
@@ -52,11 +52,11 @@ Route.group(()=>{
 
 //Роуты клиентов (Customers)
 Route.group(() => {
-  Route.post('getcustomers', 'CustomerController.getCustomers');
-  Route.get('getcustomer/:id', 'CustomerController.getCustomer');
-  Route.put('updatecustomer/:id', 'CustomerController.updateCustomer');
-  Route.delete('deletecustomer/:id', 'CustomerController.deleteCustomer');
-  Route.put('/createcustomer', 'CustomerController.createCustomer');
+  Route.post('/getall', 'CustomerController.getCustomers');
+  Route.get('/get/:id', 'CustomerController.getCustomer');
+  Route.put('/update/:id', 'CustomerController.updateCustomer');
+  Route.delete('/delete/:id', 'CustomerController.deleteCustomer');
+  Route.put('/create', 'CustomerController.createCustomer');
 })
 .prefix('api/customers')
 .middleware(['auth:jwt']);

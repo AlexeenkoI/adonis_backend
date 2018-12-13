@@ -1,6 +1,7 @@
 'use strict'
 
-const User = use('App/Models/User')
+const User = use('App/Models/User');
+const { validate } = use('Validator');
 
 class UserController {
 
@@ -22,7 +23,7 @@ class UserController {
         console.log(error);
         response.status(400).json({
           success: false,
-          message: 'Invalid email/password'
+          message: 'Неверные логин\\пароль'
         })
   }
     }
@@ -32,54 +33,183 @@ class UserController {
     }
 
     async signup({request, auth, response}){
-        console.log(auth);
-        const userData = request.body.data;
-        try {
-          const user = await User.create(userData)
-          // generate JWT token for user
-          const token = await auth.generate(user)
-    
-          return response.json({
-            status: 'success',
-            data: token
-          })
-        } catch (error) {
-          console.log(error);
-            return response.status(400).json({
-                status: 'error',
-                message: 'There was a problem creating the user, please try again later.'
-            })
+      const data = request.body.data;
+      try {
+        const user = new User();
+        for (let key in data){
+          user[key] = data[key];
         }
+        const result = await user.save();
+        return response.status(200).json({
+          success : true,
+          message : `Пользователь ${user.name} успешно создан`,
+          insertId : user.id
+        })
+      } catch (error) {
+        return response.status(500).json({
+          success : false,
+          message : `Ошибка : ${error.message}`
+        })
+      }
+        //console.log(auth);
+        //const userData = request.body.data;
+        //try {
+        //  const user = await User.create(userData)
+        //  // generate JWT token for user
+        //  const token = await auth.generate(user)
+    //
+        //  return response.json({
+        //    status: 'success',
+        //    data: token
+        //  })
+        //} catch (error) {
+        //  console.log(error);
+        //    return response.status(400).json({
+        //        status: 'error',
+        //        message: 'There was a problem creating the user, please try again later.'
+        //    })
+        //}
     }
 
     async getUsers({request, auth, response}){
+      const defaults = {
+        page : 1,
+        limit : 10,
+        whereString : false
+      }
+      let params = {
+        ...defaults,
+        ...request.body
+      }
+      try {
+        const users = await User.query()
+          .where( builder => {
+            if(params.whereString && params.whereString !== ''){
+              const str = params.whereString;
+              builder.whereRaw(`CONCAT(name,' ',surename) LIKE '%${str}%'`)
+            }
+          })
+          .paginate(params.page, params.limit);
+  
+        return response.status(200).json({
+          success : true,
+          data : users
+        })
+      } catch (error) {
+        return response.status(400).json({
+            success:false,
+            message: `Ошибка: ${error.message}`
+        })
+      }
+    }
 
+    async deleteUser({request, params, auth, response}){
+      const rules = {
+        id : "number|required"
+      }
+  
+      const validation = await validate(params, rules);
 
-      //try {
-      //  const currentUser = await User.find(auth.current.user.id);
-      //  return response.json({
-      //    status: true,
-      //    data : currentUser
-      //  })
-      //} catch (error) {
-      //  return response.status(400).json({
-      //    success : false,
-      //    message : 'User not found'
-      //  })
-      //}
+      if(auth.current.user.id === params.id){
+        return response.status(200).json({
+          success : false,
+          message : "Вы не можете удалить пользователя, под которым осуществляется работа"
+        })
+      }
+  
+      if(validation.fails()){
+        return response.status(400).json({
+          success : false,
+          message : "incorrect data"
+        })
+      }
+
+      try {
+        const user = await User.query()
+        .where('id',params.id)
+        .firstOrFail();
+  
+        await user.delete();
+  
+        return response.status(200).json({
+          success : true,
+          message : `Успешно удалено`
+        })
+  
+      } catch (error) {
+          return response.status(500).json({
+            success : false,
+            message : `Ошибка : ${error.message}`
+          })
+      }
+    }
+
+    async getUser({params, response}){
+      const rules = {
+        id : "number|required"
+      }
+  
+      const validation = await validate(params, rules);
+  
+      if(validation.fails()){
+        return response.status(400).json({
+          success : false,
+          message : "incorrect data"
+        })
+      }
+
+      try {
+        const user = await User.query()
+          .where('id', params.id)
+          .firstOrFail();
+  
+        return response.status(200).json({
+          success : true,
+          data : user
+        })
+        
+      } catch (error) {
+        return response.status(404).json({
+          success : false,
+          message : `User with id ${params.id} not found`
+        })
+      }
 
     }
 
-    async deleteUser({request, auth, response}){
-
-    }
-
-    async getUser({request, auth, response}){
-
-    }
-
-    async updateUser({request, auth, response}){
-
+    async updateUser({request, params, response}){
+      const rules = {
+        id : "number|required"
+      }
+  
+      const validation = await validate(params, rules);
+  
+      if(validation.fails()){
+        return response.status(400).json({
+          success : false,
+          message : "incorrect data"
+        })
+      }
+  
+      const data = request.body.data;
+      try {
+        const user = await User.find(params.id);
+        for (let key in data){
+          if(key === 'id') continue;
+          user[key] = data[key];
+        }
+        const result = await user.save();
+        return response.status(200).json({
+          success : true,
+          message : `Пользователь ${user.name} успешно создан`,
+          updateId : user.id
+        })
+      } catch (error) {
+        return response.status(500).json({
+          success : false,
+          message : `Ошибка : ${error.message}`
+        })
+      }
     }
 
 }

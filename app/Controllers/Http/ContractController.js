@@ -53,10 +53,10 @@ class ContractController {
             if(params.data[key] === '') continue;
 
             if(key === 'date_started'){
-              builder.where('date_started', '>', params.data[key]);
+              builder.where('date_started', '>=', params.data[key]);
             }
             else if(key === 'date_deadline'){
-              builder.where('date_deadline', '<',params.data[key]);
+              builder.where('date_deadline', '<=',params.data[key]);
             }
             else if(key === 'whereString'){
               let str = params.data[key];
@@ -170,6 +170,8 @@ class ContractController {
           .firstOrFail();
         
         await contract.delete();
+
+        await contract.users().detach();
 
         return response.status(200).json({
           success : true,
