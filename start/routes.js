@@ -61,5 +61,37 @@ Route.group(() => {
 .prefix('api/customers')
 .middleware(['auth:jwt']);
 
+//Блок роутов настроек
+Route.group(() => {
+  Route.post('/getall','StatusTypeController.getAll');
+  Route.get('/get/:id','StatusTypeController.getOne');
+  Route.put('/update/:id','StatusTypeController.updateOne');
+  Route.delete('/delete/:id','StatusTypeController.deleteOne');
+  Route.put('/create','StatusTypeController.createOne');
+})
+.prefix('api/status_types')
+.middleware(['auth:jwt']);
+
+Route.group(() => {
+  Route.post('/getall','WorkTypeController.getAll');
+  Route.get('/get/:id','WorkTypeController.getOne');
+  Route.put('/update/:id','WorkTypeController.updateOne');
+  Route.delete('/delete/:id','WorkTypeController.deleteOne');
+  Route.put('/create','WorkTypeController.createOne');
+})
+.prefix('api/work_types')
+.middleware(['auth:jwt']);
+
+Route.group(() => {
+  Route.post('/getall','UserRoleController.getAll');
+  Route.get('/get/:id','UserRoleController.getOne');
+  Route.put('/update/:id','UserRoleController.updateOne');
+  Route.delete('/delete/:id','UserRoleController.deleteOne');
+  Route.put('/create','UserRoleController.createOne');
+})
+.prefix('api/roles')
+.middleware(['auth:jwt']);
+
+
 
 
