@@ -16,9 +16,15 @@ class UserController {
         //await user.tokens()
         //    .delete()
 
+        response.cookie('auth_token', token.token);
+        response.cookie('auth_refresh', token.refreshToken);
+        //TO DO get user DAta to response
+
+        //
         return response.json({
           success: true,
-          data: token
+          //data: token
+          message : 'Авторизация успешна'
         })
       } catch (error) {
         console.log(error);
