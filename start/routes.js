@@ -92,6 +92,12 @@ Route.group(() => {
 .prefix('api/roles')
 .middleware(['auth:jwt']);
 
+Route.group(() => {
+  Route.get('/getall', 'SettingController.getAll');
+})
+.prefix('api/settings')
+.middleware(['auth:jwt']);
+
 
 
 

@@ -1,6 +1,7 @@
 'use strict'
 
 const User = use('App/Models/User');
+const userRole = use('App/Models/UserRole');
 const { validate } = use('Validator');
 
 class UserController {
@@ -89,8 +90,8 @@ class UserController {
               builder.whereRaw(`CONCAT(name,' ',surename) LIKE '%${str}%'`)
             }
           })
+          .with('role')
           .paginate(params.page, params.limit);
-  
         return response.status(200).json({
           success : true,
           data : users
@@ -162,7 +163,7 @@ class UserController {
         const user = await User.query()
           .where('id', params.id)
           .firstOrFail();
-  
+        user.role_data = await user.role().fetch();
         return response.status(200).json({
           success : true,
           data : user
@@ -171,7 +172,7 @@ class UserController {
       } catch (error) {
         return response.status(404).json({
           success : false,
-          message : `User with id ${params.id} not found`
+          message : `User with id ${error.message} not found`
         })
       }
 

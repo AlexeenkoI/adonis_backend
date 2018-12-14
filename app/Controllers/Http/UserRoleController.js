@@ -39,8 +39,8 @@ class UserRoleController {
 
     try {
       const result = await userRoles.query()
-      .where('id', params.id)
-      .firstOrFail();
+        .where('id', params.id)
+        .firstOrFail();
 
       return response.status(200).json({
         success : true,
@@ -55,16 +55,69 @@ class UserRoleController {
     
   }
 
-  async updateOne(){
+  async updateOne({request, params, response}){
     //TO DO
+    const data = request.body.data;
+    try {
+      const user_role = await userRoles.find(params.id);
+      for (let key in data){
+        if(key === 'id') continue;
+        user_role[key] = data[key];
+      }
+      await user_role.save();
+      return response.status(200).json({
+        success : true,
+        message : 'Опция успешно изменена',
+      })
+    } catch (error) {
+      return response.status(500).json({
+        success : false,
+        message : `Ошибка : ${error.message}`
+      })
+    }
   }
 
-  async deleteOne(){
+  async deleteOne({params, response}){
     //TO DO
+    try {
+      const user_role = await userRoles.query()
+        .where('id',params.id)
+        .firstOrFail();
+      
+      await user_role.delete();
+
+      return response.status(200).json({
+        success : true,
+        message : `Опция успешно удалена`
+      })
+
+    } catch (error) {
+      return response.status(500).json({
+        success : false,
+        message : `Ошибка : ${error.message}`
+      })
+    }
   }
 
-  async createOne(){
+  async createOne({request, response}){
     //TO DO
+    const data = request.body.data;
+    try {
+      const user_role = new userRoles();
+      for (let key in data){
+        user_role[key] = data[key];
+      }
+      const result = await user_role.save();
+      return response.status(200).json({
+        success : true,
+        message : 'Опция добавлена',
+      })
+    } catch (error) {
+      return response.status(500).json({
+        success : false,
+        message : `Ошибка : ${error.message}`
+      })
+    }
   }
 }
 

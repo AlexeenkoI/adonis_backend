@@ -64,6 +64,15 @@ class User extends Model {
           'contract_id')    
       .pivotTable('performes')
   }
+  //Роль в системе
+  role(){
+    return this
+      .belongsTo(
+        'App/Models/UserRole',
+        'role_id',
+        'id',
+      )
+  }
 }
 
 module.exports = User
