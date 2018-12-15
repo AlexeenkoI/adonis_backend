@@ -38,6 +38,8 @@ class ContractController {
             ...incParams.data
           }
       }
+      console.log('inc params');
+      console.log(params);
       try {
         let subQ;
         //Подзапрос для вывода заявок по исполнителям

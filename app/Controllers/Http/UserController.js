@@ -1,8 +1,10 @@
 'use strict'
 
 const User = use('App/Models/User');
-const userRole = use('App/Models/UserRole');
 const { validate } = use('Validator');
+const Encryption = use('Encryption')
+const Token = use('App/Models/Token')
+const Env = use('Env')
 
 class UserController {
 
@@ -19,11 +21,18 @@ class UserController {
         response.cookie('auth_token', token.token);
         response.cookie('auth_refresh', token.refreshToken);
         //TO DO get user DAta to response
-
+        const currentUser = await User.query()
+          .where((builder)=>{
+            builder.where('login', request.body.data.login)
+          })
+          .firstOrFail();
+        console.log(currentUser);
+        //console.log(token);
         //
         return response.json({
           success: true,
-          //data: token
+          auth_token: token.token,
+          data : currentUser,
           message : 'Авторизация успешна'
         })
       } catch (error) {
@@ -36,7 +45,23 @@ class UserController {
     }
 
     async logout({request, auth, response}){
-
+      try {
+        const user = await User.find(auth.current.user.id);
+        await user
+          .tokens()
+          .where('type', 'jwt_refresh_token')
+          .update({ is_revoked: 1 }) 
+        const check = auth.check();
+        return response.status(200).json({
+          success : true,
+          message : 'Выход осуществлен',
+        })
+      } catch (error) {
+        return response.status(400).json({
+          success : false,
+          message : `Ошибка ${error.message}`
+        })
+      }
     }
 
     async signup({request, auth, response}){

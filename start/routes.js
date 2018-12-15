@@ -27,6 +27,7 @@ Route.post('/api/users/test','UserController.signup');
 
 //Роуты пользователей и логин
 Route.post('/api/login', 'UserController.login');
+Route.post('/api/logout', 'UserController.logout').middleware(['auth:jwt']);
 
 Route.group(() => {
   Route.put('/create', 'UserController.signup');
