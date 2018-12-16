@@ -113,6 +113,7 @@ class UserController {
         ...defaults,
         ...request.body
       }
+      console.log(params);
       try {
         const users = await User.query()
           .where( builder => {

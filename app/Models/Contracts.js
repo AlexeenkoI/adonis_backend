@@ -21,6 +21,15 @@ class Contracts extends Model {
         .pivotTable('performes')
     }
 
+    customers(){
+        return this
+        .belongsTo(
+            'App/Models/Customer',
+            'customer_id',
+            'id',
+          )
+    }
+
 }
 
 module.exports = Contracts

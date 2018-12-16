@@ -42,7 +42,7 @@ Route.group(() => {
 // Роуты списка заявлений/контрактов (Contracts)
 Route.group(()=>{
   Route.post('/getall',  'ContractController.getContracts');
-  Route.put('/create', 'ContractsController.createContract')
+  Route.put('/create', 'ContractController.createContract')
   Route.get('/get/:id', 'ContractController.getContract');
   Route.put('/update/:id', 'ContractController.updateContract');
   Route.delete('delete/:id', 'ContractController.deleteContract');

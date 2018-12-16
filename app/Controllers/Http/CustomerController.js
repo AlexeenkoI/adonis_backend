@@ -14,11 +14,12 @@ class CustomerController {
       ...defaults,
       ...request.body
     }
+    console.log(params);
     try {
       const customers = await Customers.query()
         .where( builder => {
-          if(params.whereString && params.whereString !== ''){
-            const str = params.whereString;
+          if(params.data.whereString && params.data.whereString !== ''){
+            const str = params.data.whereString;
             builder.whereRaw(`CONCAT(name,' ',firstname,' ', secondname) LIKE '%${str}%'`)
           }
         })

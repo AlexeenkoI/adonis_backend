@@ -30,9 +30,13 @@ class ContractController {
         }
       }
       let incParams = request.body
+      console.log('pre params');
+      console.log(incParams);
       let params = {
-          ...defaultParams,
-          ...incParams,
+          //...defaultParams,
+          page :  incParams.page ? incParams.page : 1, 
+          limit : incParams.limit ? incParams.limit : 10,
+          //...incParams,
           data:{
             ...defaultParams.data,
             ...incParams.data
@@ -53,7 +57,6 @@ class ContractController {
             //отсекаем дефолтные и пустые  значения
             if(params.data[key] === null) continue;
             if(params.data[key] === '') continue;
-
             if(key === 'date_started'){
               builder.where('date_started', '>=', params.data[key]);
             }
@@ -65,6 +68,7 @@ class ContractController {
               builder.whereRaw(`CONCAT(contract_number, address) LIKE '%${str}%'`);
             }
             else if(key === 'contractor'){
+              if(params.data[key][0] != null)
               builder.whereIn('id', subQ.rows.map( item => item.contract_id));
             }else {
               builder.where(key, params.data[key])
@@ -72,7 +76,17 @@ class ContractController {
           }
         })
         .with('users')
+        //.toString()
         .paginate(params.page, params.limit)
+        
+       // const t = await contracts.users().fetch();
+        //console.log(t)
+
+        //if(params.data.contractor[0] !== null){
+        //  contracts.users = await contracts.users().fetch();
+        //}else{
+        //  contracts.users = {};
+        //}
 
         return response.status(200).json({
           success: true,
@@ -97,9 +111,13 @@ class ContractController {
       try {
         const  contract = await Contracts.query()
           .where('id',params.id)
-          .with('users')
+          //.with('users')
           .firstOrFail();
-        
+
+        const contractUsers = await contract.users().fetch();
+        const userResult = contractUsers.rows.map( item => item.id);
+        contract.contractor = userResult;
+        console.log(contract);
         return response.status(200).json({
           success : true,
           data : contract,
