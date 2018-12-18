@@ -1,31 +1,42 @@
 'use strict'
 
 const Helpers = use('Helpers')
-const Files = use('App/Model/Files')
+const File = use('App/Models/File')
 
-class UserController {
+class FilesController {
 
-  * upload (request, response) {    
-
-    const file = request.file('files', {
-      maxSize: '2mb',
-      allowedExtensions: ['jpg', 'png', 'jpeg']
-    })
-
-    Files.contract_id = request.param('contract_id') 
-    Files.name = file.clientName()
-    Files.path = Helpers.storagePath() + '/files' 
-
-    //const fileName = `${new Date().getTime()}.${name}.${file.extension()}` 
-    yield file.moveAll(Files.path, Files.name)
-
-    if (!file.movedAll()) {
-      response.badRequest(file.errors())
-      return
+  async upload ({request, response}) {    
+    const validationOptions = {
+      types: ['image'], // examples like application(doc, docx), image, text
+      size: '2mb',
+      extnames: ['jpg', 'png', 'jpeg']
     }
-    
-    yield contract.save()
-    response.ok('file successfully')
+
+    const file = request.file('file', validationOptions)
+
+
+    file.fileName = file.clientName;
+    const movePath = `storage/uploads/1/`; //Edit to contract-id folder like storage/uploads/${contract_id}/
+    /** return validator error type
+     * error:
+     * {
+        fieldName: "profile_pic",
+        clientName: "GitHub-Mark.ai",
+        message: "Invalid file type postscript or application. Only image is allowed",
+        type: "type"
+      }
+     */
+    await file.move(movePath);
+    if(!file.move()){
+      return file.errors();
+    }
+    const newFile = new File();
+    //newFile.path = '';
+    //newFile.name = '';
+    //newFile.contract_id = '';
+    //newFile.save();
+
+    response.ok(file);
   }
 }
 module.exports = FilesController

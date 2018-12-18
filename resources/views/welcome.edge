@@ -4,11 +4,19 @@
   <meta charset="UTF-8" />
   <title>Hello Adonis</title>
   {{ style('style') }}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/dropzone.css">
 </head>
 <body>
-  <form method="POST" action="/files" enctype="multipart/form-data">
-    <input type="file" name="profile_pic" />
-    <button type="submit"> Submit </button>
+  <form method="POST" action="/api/files/upload" class="dropzone" id="fileUploader" enctype="multipart/form-data">
+    
+    
   </form>
 </body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/dropzone.js"></script>
+<script>
+  Dropzone.options.myAwesomeDropzone = {
+    paramName : 'file'
+  }
+</script>
 </html>
