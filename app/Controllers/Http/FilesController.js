@@ -16,7 +16,7 @@ class FilesController {
 
 
     file.fileName = file.clientName;
-    const movePath = `storage/uploads/1/`; //Edit to contract-id folder like storage/uploads/${contract_id}/
+    const movePath = `storage/uploads/1/`; //Edit to contract-id folder like `storage/uploads/${contract_id}/`
     /** return validator error type
      * error:
      * {
@@ -37,6 +37,14 @@ class FilesController {
     //newFile.save();
 
     response.ok(file);
+  }
+
+  async remove({request, response}){
+    //TO DO delete file via event-trigger
+  }
+
+  async get({request, response}){
+    //TO DO get file via link
   }
 }
 module.exports = FilesController
