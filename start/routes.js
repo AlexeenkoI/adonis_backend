@@ -99,6 +99,10 @@ Route.group(() => {
 .prefix('api/settings')
 .middleware(['auth:jwt']);
 
-
+Route.group(()=> {
+  Route.put('/upload', 'FilesController.upload');
+})
+.prefix('api/files');
+//.middleware(['auth:jwt']);
 
 

@@ -30,6 +30,15 @@ class Contracts extends Model {
           )
     }
 
+    files(){
+        return this
+        .hasMany(
+            'App/Models/Files',
+            'contract_id',
+            'id',
+        )
+    }
+
 }
 
 module.exports = Contracts
