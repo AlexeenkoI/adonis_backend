@@ -6,10 +6,9 @@
   {{ style('style') }}
 </head>
 <body>
-  <section>
-    <div class="logo"></div>
-    <div class="title"></div>
-    <div class="subtitle"><p>AdonisJs simplicity will make you feel confident about your code</p></div>
-  </section>
+  <form method="POST" action="/files" enctype="multipart/form-data">
+    <input type="file" name="profile_pic" />
+    <button type="submit"> Submit </button>
+  </form>
 </body>
 </html>
