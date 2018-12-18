@@ -105,4 +105,5 @@ Route.group(()=> {
 .prefix('api/files');
 //.middleware(['auth:jwt']);
 
-
+//test files
+Route.post('/files', 'FilesController.upload');
