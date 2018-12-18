@@ -17,9 +17,9 @@ class UserController {
     Files.path = Helpers.storagePath() + '/files' 
 
     //const fileName = `${new Date().getTime()}.${name}.${file.extension()}` 
-    yield file.move(Files.path, Files.name)
+    yield file.moveAll(Files.path, Files.name)
 
-    if (!file.moved()) {
+    if (!file.movedAll()) {
       response.badRequest(file.errors())
       return
     }
