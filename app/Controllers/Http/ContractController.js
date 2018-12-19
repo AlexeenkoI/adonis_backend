@@ -48,7 +48,7 @@ class ContractController {
         let subQ;
         //Подзапрос для вывода заявок по исполнителям
         if(params.data.contractor && params.data.contractor !== null){
-          subQ = await Performes.query().distinct('contract_id').whereIn('user_id',params.data.contractor).fetch();
+          subQ = await Performes.query().select('contract_id').whereIn('user_id',params.data.contractor).fetch();
         }
         const contracts = await Contracts
         .query()
