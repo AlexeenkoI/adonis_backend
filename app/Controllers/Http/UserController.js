@@ -111,7 +111,7 @@ class UserController {
       }
       let params = {
         ...defaults,
-        ...request.body
+        ...request.body.data
       }
       console.log(params);
       try {
@@ -119,11 +119,15 @@ class UserController {
           .where( builder => {
             if(params.whereString && params.whereString !== ''){
               const str = params.whereString;
+              console.log(str);
               builder.whereRaw(`CONCAT(name,' ',surename) LIKE '%${str}%'`)
             }
           })
           .with('role')
+          //.toString()
           .paginate(params.page, params.limit);
+
+
         return response.status(200).json({
           success : true,
           data : users

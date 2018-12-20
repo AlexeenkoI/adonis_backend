@@ -18,3 +18,4 @@ const Ws = use('Ws')
 Ws.channel('test:*', ({ socket }) => {
   console.log('user joined with %s socket id', socket.id)
 })
+

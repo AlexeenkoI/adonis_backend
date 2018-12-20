@@ -90,7 +90,7 @@ Route.group(() => {
   Route.delete('/delete/:id','UserRoleController.deleteOne');
   Route.put('/create','UserRoleController.createOne');
 })
-.prefix('api/roles')
+.prefix('api/user_roles')
 .middleware(['auth:jwt']);
 
 Route.group(() => {

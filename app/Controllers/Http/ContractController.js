@@ -87,6 +87,7 @@ class ContractController {
         //}else{
         //  contracts.users = {};
         //}
+        contracts.date_deadline = new Date(contracts.date_deadline * 1000);
 
         return response.status(200).json({
           success: true,

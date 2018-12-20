@@ -10,7 +10,7 @@ class SettingController {
         
       try {
         let data = {};
-        data.statys_types = await statusTypes.query().fetch();
+        data.status_types = await statusTypes.query().fetch();
         data.work_types = await workTypes.query().fetch();
         data.user_roles = await userRoles.query().fetch();
 
