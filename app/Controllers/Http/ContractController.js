@@ -58,7 +58,7 @@ class ContractController {
             if(params.data[key] === null) continue;
             if(params.data[key] === '') continue;
             if(key === 'date_started'){
-              builder.where('date_started', '>=', params.data[key]);
+              builder.where('date_deadline', '>=', params.data[key]);
             }
             else if(key === 'date_deadline'){
               builder.where('date_deadline', '<=',params.data[key]);
@@ -76,7 +76,6 @@ class ContractController {
           }
         })
         .with('users')
-        //.toString()
         .paginate(params.page, params.limit)
         
        // const t = await contracts.users().fetch();

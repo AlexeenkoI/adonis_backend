@@ -5,7 +5,7 @@ const Model = use('Model')
 
 class Contracts extends Model {
     static get createdAtColumn() {
-        return null;
+        return 'date_started';
     }
 
     static get updatedAtColumn() {
