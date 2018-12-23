@@ -16,6 +16,7 @@ class FilesController {
 
 
     file.fileName = file.clientName;
+    file.url = `api/files/download/${file.fileName}`;
     const movePath = `storage/uploads/1/`; //Edit to contract-id folder like `storage/uploads/${contract_id}/`
     /** return validator error type
      * error:
@@ -26,16 +27,17 @@ class FilesController {
         type: "type"
       }
      */
-    await file.move(movePath);
-    if(!file.move()){
-      return file.errors();
-    }
+    //await file.move(movePath);
+    //if(!file.move()){
+    //  return file.errors();
+    //}
+   
     const newFile = new File();
     //newFile.path = '';
     //newFile.name = '';
     //newFile.contract_id = '';
     //newFile.save();
-
+    console.log(file);
     response.ok(file);
   }
 
