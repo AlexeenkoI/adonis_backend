@@ -20,18 +20,31 @@
   }
 </script>
 
-<script src="https://unpkg.com/@adonisjs/websocket-client"></script>
+
+<!--
+  <script src="https://unpkg.com/@adonisjs/websocket-client"></script>
+-->
+
+
+<script src="/socket.io/socket.io.js"></script>
 <script>
-  
+    var socket = io('http://localhost:3333');
+  socket.on('connect', function(){});
+  socket.on('event', function(data){});
+  socket.on('disconnect', function(){});
+
+
+
+  /*
   //console.log(Ws())
   const ws = adonis.Ws('ws://localhost:3333', "hello")
   ws.connect()
   
 
-/*
- import Ws from '@adonisjs/websocket-client'
- const ws = Ws('ws://localhost:3333')
- */
+
+// import Ws from '@adonisjs/websocket-client'
+// const ws = Ws('ws://localhost:3333')
+
 
 ws.on('open', ()=>{
   console.log('open')
@@ -39,12 +52,12 @@ ws.on('open', ()=>{
     console.log('testopen')
   })
 })
-/*
-  const socket = ws.subscribe('test')
 
-  socket.on('test', ()=>{
-    console.log('test')
-  })
+//  const socket = ws.subscribe('test')
+
+ // socket.on('test', ()=>{
+ //   console.log('test')
+ // })
   */
 
 </script>

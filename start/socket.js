@@ -13,6 +13,8 @@
 |
 */
 
+/*
+
 const Ws = use('Ws')
 
 Ws.channel('test', ({ socket }) => {
@@ -21,4 +23,12 @@ Ws.channel('test', ({ socket }) => {
 
 Ws.channel('open', ({socket}) => {
   console.log('open')
+})
+*/
+
+const Server = use('Server')
+const io = use('socket.io')(Server.getInstance())
+
+io.on('connection', function (socket){
+  console.log(socket.id)
 })
