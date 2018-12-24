@@ -7,17 +7,16 @@ class FilesController {
 
   async upload ({request, response}) {    
     const validationOptions = {
-      types: ['image'], // examples like application(doc, docx), image, text
-      size: '2mb',
-      extnames: ['jpg', 'png', 'jpeg']
+      types: ['image', 'application', 'application/pdf', 'image/vnd.adobe.photoshop'], // examples like application(doc, docx), image, text
+      size: '4mb',
+      extnames: ['jpg', 'png', 'jpeg', 'doc', 'docx', 'pdf', 'psd']
     }
+    let contractId = request.body.upload_contract;
+    let file = request.file('file', validationOptions)
+    //console.log(request);
 
-    const file = request.file('file', validationOptions)
-
-
-    file.fileName = file.clientName;
-    file.url = `api/files/download/${file.fileName}`;
-    const movePath = `storage/uploads/1/`; //Edit to contract-id folder like `storage/uploads/${contract_id}/`
+    //file.fileName = file.clientName;
+    const movePath = `storage/uploads/${contractId}/`; //Edit to contract-id folder like `storage/uploads/${contract_id}/`
     /** return validator error type
      * error:
      * {
@@ -27,18 +26,27 @@ class FilesController {
         type: "type"
       }
      */
-    //await file.move(movePath);
-    //if(!file.move()){
-    //  return file.errors();
-    //}
-   
-    const newFile = new File();
-    //newFile.path = '';
-    //newFile.name = '';
-    //newFile.contract_id = '';
-    //newFile.save();
-    console.log(file);
-    response.ok(file);
+    try {
+      const fileName = `${new Date().getTime()}.${file.extname}`
+      await file.move(movePath,{name : fileName})
+      if(!file.moved()){
+        return file.errors();
+      }
+      console.log(file.fileName);
+      const newFile = new File();
+      newFile.path = movePath + fileName;
+      newFile.name = file.clientName;
+      newFile.contract_id = contractId;
+      newFile.save();
+      //console.log(file);
+      response.ok(file);
+    } catch (error) {
+      response.json({
+        success : false,
+        message : `Ошибка : ${error.message}`
+      })
+    }
+
   }
 
   async remove({request, response}){
