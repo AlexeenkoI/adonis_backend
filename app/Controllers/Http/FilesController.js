@@ -2,6 +2,8 @@
 
 const Helpers = use('Helpers')
 const File = use('App/Models/File')
+const fs = use('fs')
+const removeFile = Helpers.promisify(fs.unlink)
 
 class FilesController {
 
@@ -26,18 +28,20 @@ class FilesController {
         type: "type"
       }
      */
+    //console.log(movePath);
     try {
       const fileName = `${new Date().getTime()}.${file.extname}`
       await file.move(movePath,{name : fileName})
       if(!file.moved()){
         return file.errors();
       }
-      console.log(file.fileName);
+      //console.log(file.fileName);
       const newFile = new File();
       newFile.path = movePath + fileName;
       newFile.name = file.clientName;
       newFile.contract_id = contractId;
-      newFile.save();
+      await newFile.save();
+      file.tmpPath = movePath + fileName;
       //console.log(file);
       response.ok(file);
     } catch (error) {
@@ -49,12 +53,47 @@ class FilesController {
 
   }
 
-  async remove({request, response}){
+  async remove({request, params, response}){
     //TO DO delete file via event-trigger
+    //console.log('remove controller');
+    //console.log(params.contractId);
+    //console.log(request.body);
+    const filePath = request.body.filePath;
+    try {
+      const file = await File.query()
+        .where('path', filePath)
+        .andWhere('contract_id',params.contractId)
+        .firstOrFail();
+
+      await removeFile(filePath);
+      await file.delete();    
+
+      response.json({
+        success : true,
+        message : `Файл ${file.name} успешно удален`
+      })
+    } catch (error) {
+      response.json({
+        success : false,
+        message : `Ошибка ${error.message}`
+      })
+    }
   }
 
-  async get({request, response}){
+  async get({request, params, response}){
     //TO DO get file via link
+    try {
+      const fileList = await File.query()
+      .where('contract_id', params.contractId)
+      .fetch()
+      return response.json({
+        success : true,
+        data : fileList
+      })
+    } catch (error) {
+      
+    }
+
   }
 }
 module.exports = FilesController
