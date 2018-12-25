@@ -8,7 +8,7 @@
 | Used by AdonisJs websocket server
 |
 */
-module.exports = {
+//module.exports = {
   /*
   |--------------------------------------------------------------------------
   | Path
@@ -17,7 +17,7 @@ module.exports = {
   | The base path on which the websocket server will accept connections.
   |
   */
-  path: '/adonis-ws',
+  //path: '/adonis-ws',
 
   /*
   |--------------------------------------------------------------------------
@@ -28,7 +28,7 @@ module.exports = {
   | connections.
   |
   */
-  serverInterval: 30000,
+ // serverInterval: 30000,
 
   /*
   |--------------------------------------------------------------------------
@@ -40,7 +40,7 @@ module.exports = {
   | will be made before terminating the client connection.
   |
   */
-  serverAttempts: 3,
+  //serverAttempts: 3,
 
   /*
   |--------------------------------------------------------------------------
@@ -50,7 +50,7 @@ module.exports = {
   | This interval is used by client to send ping frames to the server.
   |
   */
-  clientInterval: 25000,
+  //clientInterval: 25000,
 
   /*
   |--------------------------------------------------------------------------
@@ -62,5 +62,5 @@ module.exports = {
   | been elapsed, the client will consider server as dead.
   |
   */
-  clientAttempts: 3
-}
+  //clientAttempts: 3
+//}
