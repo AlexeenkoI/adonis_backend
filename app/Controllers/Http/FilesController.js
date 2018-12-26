@@ -7,6 +7,10 @@ const removeFile = Helpers.promisify(fs.unlink)
 
 class FilesController {
 
+  constructor(){
+    this.uploadPath = "storage/uploads";
+  }
+
   async upload ({request, response}) {    
     const validationOptions = {
       types: ['image', 'application', 'application/pdf', 'image/vnd.adobe.photoshop'], // examples like application(doc, docx), image, text
@@ -42,6 +46,7 @@ class FilesController {
       newFile.contract_id = contractId;
       await newFile.save();
       file.tmpPath = movePath + fileName;
+      file.contract_id = contractId;
       //console.log(file);
       response.ok(file);
     } catch (error) {
@@ -59,6 +64,8 @@ class FilesController {
     //console.log(params.contractId);
     //console.log(request.body);
     const filePath = request.body.filePath;
+    console.log(filePath);
+    console.log(params.contractId);
     try {
       const file = await File.query()
         .where('path', filePath)
@@ -86,14 +93,41 @@ class FilesController {
       const fileList = await File.query()
       .where('contract_id', params.contractId)
       .fetch()
+      const result = fileList.rows.map( file => {
+        const uName = file.path.split('/')[3]
+        return {
+          uid : file.id,
+          name : file.name,
+          status : "done",
+          url : `/api/files/download/${file.contract_id}/${uName}`,
+          storagePath : file.path,
+          linkProps : "image"
+        }
+      })
       return response.json({
         success : true,
-        data : fileList
+        data : result
       })
     } catch (error) {
-      
+      return response.json({
+        success : false,
+        message : `Ошибка ${error.message}`
+      })
     }
 
+  }
+
+  async downloadFile({params, response}){
+    const folderId = params.contractid;
+    const fileName = params.filename;
+    console.log('downloading...');
+    console.log(folderId);
+    console.log(fileName);
+    console.log('root : ');
+    console.log( this.uploadPath);
+    response.attachment(
+      `${this.uploadPath}/${folderId}/${fileName}`
+    )
   }
 }
 module.exports = FilesController
