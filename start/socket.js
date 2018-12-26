@@ -29,6 +29,13 @@ Ws.channel('open', ({socket}) => {
 const Server = use('Server')
 const io = use('socket.io')(Server.getInstance())
 
-io.on('connection', function (socket){
+io.on('connection', (socket) => {  
   console.log(socket.id)
+
+  io.on('ContractPush', (room) => {
+    socket.join(room)
+    console.log(room)
+  })
+
+  
 })
