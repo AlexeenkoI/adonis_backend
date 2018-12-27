@@ -43,8 +43,8 @@ class ContractController {
             ...incParams.data
           }
       }
-      console.log('inc params');
-      console.log(params);
+      //console.log('inc params');
+      //console.log(params);
       try {
         let subQ;
         //Подзапрос для вывода заявок по исполнителям
@@ -120,7 +120,7 @@ class ContractController {
         const contractUsers = await contract.users().fetch();
         const userResult = contractUsers.rows.map( item => item.id);
         contract.contractor = userResult;
-        console.log(contract);
+        //console.log(contract);
         return response.status(200).json({
           success : true,
           data : contract,
