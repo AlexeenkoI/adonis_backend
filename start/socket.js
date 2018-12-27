@@ -30,12 +30,14 @@ const Server = use('Server')
 const io = use('socket.io')(Server.getInstance())
 
 io.on('connection', (socket) => {  
-  console.log(socket.id)
+  console.log(socket)
 
   io.on('ContractPush', (room) => {
     socket.join(room)
-    console.log(room)
+    console.log("Contract push id user....." + room)
   })
-
   
 })
+
+
+
