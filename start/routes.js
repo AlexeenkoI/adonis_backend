@@ -106,6 +106,7 @@ Route.group(()=> {
 })
 .prefix('api/files');
 //.middleware(['auth:jwt']);
+Route.get('/api/files/download/:contractid/:filename', 'FilesController.downloadFile');
 
 //test files
 Route.post('/files', 'FilesController.upload');
