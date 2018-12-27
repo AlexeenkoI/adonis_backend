@@ -5,6 +5,7 @@ const Contracts = use('App/Models/Contracts');
 const User = use("App/Models/User");
 const Performes = use('App/Models/Performes');
 const Hash = use('Hash');
+const io = use('socket.io');
 
 class ContractController {
 
@@ -30,8 +31,8 @@ class ContractController {
         }
       }
       let incParams = request.body
-      console.log('pre params');
-      console.log(incParams);
+      //console.log('pre params');
+      //console.log(incParams);
       let params = {
           //...defaultParams,
           page :  incParams.page ? incParams.page : 1, 
@@ -86,6 +87,8 @@ class ContractController {
         //}else{
         //  contracts.users = {};
         //}
+        //console.log('sockets');
+        //console.log(io.sockets.clients());
         contracts.date_deadline = new Date(contracts.date_deadline * 1000);
 
         return response.status(200).json({

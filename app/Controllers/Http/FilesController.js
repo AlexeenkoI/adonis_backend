@@ -101,7 +101,7 @@ class FilesController {
           status : "done",
           url : `/api/files/download/${file.contract_id}/${uName}`,
           storagePath : file.path,
-          linkProps : "image"
+          //linkProps : "image"
         }
       })
       return response.json({

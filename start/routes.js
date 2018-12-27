@@ -110,3 +110,6 @@ Route.get('/api/files/download/:contractid/:filename', 'FilesController.download
 
 //test files
 Route.post('/files', 'FilesController.upload');
+
+
+//Route.any('*', ({ view }) => view.render('app'))

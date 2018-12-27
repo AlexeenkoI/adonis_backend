@@ -1,5 +1,5 @@
 'use strict'
-
+const User = use("App/Models/User")
 /*
 |--------------------------------------------------------------------------
 | Websocket
@@ -13,22 +13,34 @@
 |
 */
 
-/*
+
 
 const Ws = use('Ws')
 
-Ws.channel('test', ({ socket }) => {
-  console.log('user joined with %s socket id', socket.id)
-})
+//Ws.channel('contractsRoom', ({ socket }) => {
+//  console.log('user joined with %s socket id', socket.id)
+//})
+Ws.channel('contractsRoom','SocketController')
+//Ws.channel('chat', 'ChatController')
+//Ws.channel('open', ({socket}) => {
+//  console.log('open')
+//})
 
-Ws.channel('open', ({socket}) => {
-  console.log('open')
-})
-*/
 
-const Server = use('Server')
-const io = use('socket.io')(Server.getInstance())
 
-io.on('connection', function (socket){
-  console.log(socket.id)
-})
+
+//const Server = use('Server')
+//const io = use('socket.io')(Server.getInstance())
+//io.on('connection', function (socket){
+//  console.log(socket.id)
+//
+//  socket.emit('testEmit',{
+//    data : 1,
+//    msg : 'test'
+//  })
+//  socket.on('disconnect', function (socket) {
+//    console.log('socket disconnected');
+//    console.log(socket.id);
+//  })
+//})
+
