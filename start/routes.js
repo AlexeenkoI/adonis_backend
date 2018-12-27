@@ -101,6 +101,8 @@ Route.group(() => {
 
 Route.group(()=> {
   Route.post('/upload', 'FilesController.upload');
+  Route.post('/remove/:contractId','FilesController.remove')
+  Route.get('/getfiles/:contractId', 'FilesController.get')
 })
 .prefix('api/files');
 //.middleware(['auth:jwt']);
