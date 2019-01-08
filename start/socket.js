@@ -22,10 +22,7 @@ const Ws = use('Ws')
 //})
 Ws.channel('contractsRoom','SocketController')
 .middleware(['auth:jwt']);
-//Ws.channel('chat', 'ChatController')
-//Ws.channel('open', ({socket}) => {
-//  console.log('open')
-//})
+
 
 
 

@@ -9,11 +9,8 @@ class SocketController {
     this.socket = socket
     this.auth_id = auth.user.id;
     this.request = request
-    //console.log('socket right here...');
-    //console.log(socket);
     console.log('socket contsructor');
     console.log(socket.id);
-    //console.log('connected user:')
     //console.log(auth.user.id)
 
     //const channel = Ws.channel('contractsRoom');
