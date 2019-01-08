@@ -2,6 +2,8 @@
 
 const Customers = use('App/Models/Customer');
 const { validate } = use('Validator');
+const SocketService = use('App/Services/SocketService');
+//const SocketService = require('App/Services/SocketService');
 
 class CustomerController {
   async getCustomers({request, response}){
@@ -14,7 +16,9 @@ class CustomerController {
       ...defaults,
       ...request.body
     }
-    console.log(params);
+    //console.log(params);
+    console.log('sockets connected : ');
+    SocketService.ToArray();
     try {
       const customers = await Customers.query()
         .where( builder => {

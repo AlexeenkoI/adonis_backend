@@ -21,6 +21,7 @@ const Ws = use('Ws')
 //  console.log('user joined with %s socket id', socket.id)
 //})
 Ws.channel('contractsRoom','SocketController')
+.middleware(['auth:jwt']);
 //Ws.channel('chat', 'ChatController')
 //Ws.channel('open', ({socket}) => {
 //  console.log('open')

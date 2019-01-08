@@ -4,8 +4,8 @@
 const Contracts = use('App/Models/Contracts');
 const User = use("App/Models/User");
 const Performes = use('App/Models/Performes');
-const Hash = use('Hash');
-const io = use('socket.io');
+const Ws = use('Ws');
+const SocketService = use('App/Services/SocketService');
 
 class ContractController {
 
@@ -159,7 +159,32 @@ class ContractController {
           //Синхронизируем связи в сводной таблице 
           // sunc = .detach([]) & .attach([]) - удаление связей и создание связей заново - апдейтим связующую таблицу
           await contract.users().sync(data.contractor);
+
+          let connSocks = [];
+
+          data.contractor.forEach( id => {
+            const connectedId = SocketService.Get(id);
+            if(connectedId !== -1){
+              connSocks.push(connectedId);
+            }
+          })
+          console.log('connected sockets');
+          console.log(connSocks);
+          if(connSocks.length > 0){
+            const data = [{
+              
+              message : `Изменения по заявке ${contract.id}`,
+              id : contract.id
+            }]
+            await Ws
+            .getChannel('contractsRoom')
+            .topic('contractsRoom')
+            .emitTo('newContractData',data,connSocks)
+          }
         }
+
+
+ 
         return response.status(200).json({
           success : true,
           message : 'Контракт успешно изменен',
@@ -223,6 +248,27 @@ class ContractController {
           //Синхронизируем связи в сводной таблице 
           // здесь вызываем только attach([]) - добавление связей в сводную таблицу
           await contract.users().attach(data.contractor);
+        }
+        let connSocks = [];
+
+        data.contractor.forEach( id => {
+          const connectedId = SocketService.Get(id);
+          if(connectedId !== -1){
+            connSocks.push(connectedId);
+          }
+        })
+        console.log('connected sockets');
+        console.log(connSocks);
+        if(connSocks.length > 0){
+          const data = [{
+              
+            message : `Новое заявление № ${contract.id}`,
+            id : contract.id
+          }]
+          await Ws
+          .getChannel('contractsRoom')
+          .topic('contractsRoom')
+          .emitTo('newContractData',data,connSocks)
         }
         return response.status(200).json({
           success : true,
