@@ -20,7 +20,7 @@ const Contracts = use('App/Models/Contracts');
 const Users = use('App/Models/User');
 
 
-Route.on('/').render('welcome');
+//Route.on('/').render('welcome');
 
 //Тестовый  маршрут для создания пользователя
 Route.post('/api/users/test','UserController.signup');
@@ -112,4 +112,4 @@ Route.get('/api/files/download/:contractid/:filename', 'FilesController.download
 Route.post('/files', 'FilesController.upload');
 
 
-//Route.any('*', ({ view }) => view.render('app'))
+Route.any('*', ({ view }) => view.render('app'))
