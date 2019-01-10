@@ -66,7 +66,7 @@ class ContractController {
             }
             else if(key === 'whereString'){
               let str = params.data[key];
-              builder.whereRaw(`CONCAT(contract_number, address) LIKE '%${str}%'`);
+              builder.whereRaw(`CONCAT(id, address) like '%${str}%'`);
             }
             else if(key === 'contractor'){
               if(params.data[key][0] != null)
@@ -78,6 +78,7 @@ class ContractController {
         })
         .with('users')
         .paginate(params.page, params.limit)
+        //console.log(contracts);
         
        // const t = await contracts.users().fetch();
         //console.log(t)
