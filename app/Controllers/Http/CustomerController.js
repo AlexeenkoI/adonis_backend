@@ -99,13 +99,14 @@ class CustomerController {
       const customer = await Customers.find(params.id);
       for (let key in data){
         if(key === 'id') continue;
+        if(key === 'ctime') continue;
         customer[key] = data[key];
       }
       const result = await customer.save();
       return response.status(200).json({
         success : true,
         message : `Клиент ${customer.name} успешно изменен`,
-        updateId : customer.id
+        insertId : customer.id
       })
     } catch (error) {
       return response.status(500).json({
